@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-J36WZEYP99"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'G-J36WZEYP99');
+        </script>
+
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+        <meta name="description" content=" A web tool for viewing letter permutations." />
+        <meta name="keywords" content="Permutation Generator, Anagram Helper, Cryptic Crossword Tools" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://permutations.doteye.online" />
+        <meta property="og:title" content="Permutation Scroller" />
+        <meta property="og:description" content="A web tool for viewing letter permutations." />
+        <meta property="og:image" content="/ogImage.png" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <title>Permutation Scroller</title>
+    </head>
+
+    <body>
+        <div id="app">
+            <a href="https://doteye.online" target="_blank">
+                <svg width="72" height="72" class="eye">
+                    <filter id="glow">
+                        <feTurbulence type="turbulence" numOctaves="1" result="turbulence">
+                            <animate
+                                attributeName="baseFrequency"
+                                dur="10s"
+                                values="0.1; 0.025; 0.1"
+                                repeatCount="indefinite"
+                            />
+                        </feTurbulence>
+                        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" />
+                    </filter>
+                    <g transform="translate(12, 12)">
+                        <rect x="-5" y="-5" width="48" height="48" class="eye-background" fill="#ffffffbf" />
+                        <rect x="-5" y="1" width="48" height="48" class="eye-background" fill="#ffffffbf" />
+                        <rect x="1" y="-5" width="48" height="48" class="eye-background" fill="#ffffffbf" />
+                        <rect x="1" y="1" width="48" height="48" class="eye-background" fill="#ffffffbf" />
+                    </g>
+                    <rect x="12" y="12" width="48" height="48" fill="#d07e9e" />
+                    <rect x="20" y="20" width="12" height="12" fill="#1a2b3d" />
+                </svg>
+            </a>
+            <header id="controls">
+                <div class="header-container">
+                    <h1>Permutation Scroller</h1>
+                    <button id="help-btn" aria-label="Help/About" title="Help">?</button>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="word-input" placeholder="Type a word..." autocomplete="off" autofocus />
+                </div>
+
+                <div class="options-container">
+                    <label class="control-label">
+                        <input type="checkbox" id="random-order" checked />
+                        Random order
+                    </label>
+
+                    <label class="control-label">
+                        <input type="checkbox" id="no-duplicates" />
+                        No duplicates
+                    </label>
+
+                    <div class="control-group">
+                        <label for="spaces-select">Spaces:</label>
+                        <select id="spaces-select">
+                            <option value="remove">Remove spaces</option>
+                            <option value="preserve">Preserve spaces</option>
+                            <option value="shuffle">Shuffle spaces</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="casing-select">Casing:</label>
+                        <select id="casing-select">
+                            <option value="preserve">Preserve case</option>
+                            <option value="lowercase" selected>Lowercase</option>
+                            <option value="uppercase">Uppercase</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="font-size">Font size: <span id="font-size-val">16px</span></label>
+                        <input type="range" id="font-size" min="8" max="36" value="16" />
+                    </div>
+
+                    <div class="control-group">
+                        <label for="theme-select">Theme:</label>
+                        <select id="theme-select">
+                            <option value="system">System</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="stats-panel">
+                    <span id="total-count-label">Permutations: 0</span>
+                </div>
+            </header>
+
+            <main id="permutations-container">
+                <div id="permutations-text"></div>
+                <div id="end-message" class="hidden">That's all of them</div>
+                <div id="scroll-sentinel"></div>
+            </main>
+        </div>
+
+        <button id="back-to-top" class="hidden">Back to top</button>
+
+        <!-- Help Modal -->
+        <dialog id="help-modal" aria-labelledby="modal-title">
+            <div class="modal-content">
+                <h2 id="modal-title">About Permutation Scroller</h2>
+                <div class="modal-body">
+                    <p>
+                        Permutation Scroller efficiently generates all letter permutations of your input text, allowing
+                        you to infinitely scroll through them.
+                    </p>
+                    <p>
+                        This is useful for games or puzzles that involve rearranging letters such as Scrabble or cryptic
+                        crosswords, helping your brain discover the real words among the noise.
+                    </p>
+                    <p>
+                        This tool is <strong>not</strong> an anagram solver and has no knowledge of which words are
+                        real. Using anagram solvers is considered cheating in some games or puzzles. Permutation
+                        Scroller is intentionally designed to be less useful than anagram solvers to potentially be
+                        considered fair use. It is up to you or your group to decide whether to allow this tool.
+                    </p>
+                </div>
+                <div class="modal-actions">
+                    <div>
+                        <a class="icon" href="https://discord.gg/tykwEuuYCt" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/discord.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/discord.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/discord.svg"
+                                    alt="Discord"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://www.youtube.com/DotEyeOnline" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/youtube.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/youtube.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/youtube.svg"
+                                    alt="YouTube"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://www.instagram.com/doteyeonline" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/instagram.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/instagram.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/instagram.svg"
+                                    alt="Instagram"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://www.tiktok.com/@doteyeonline" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/tiktok.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/tiktok.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/tiktok.svg"
+                                    alt="TikTok"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://reddit.com/u/DotEyeOnline" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/reddit.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/reddit.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/reddit.svg"
+                                    alt="Reddit"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://twitter.com/DotEyeOnline" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/x.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/x.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/x.svg"
+                                    alt="X"
+                                />
+                            </picture>
+                        </a>
+                        <a class="icon" href="https://github.com/DotEye" target="_blank">
+                            <picture>
+                                <source
+                                    srcset="https://doteye.online/assets/social/dark/github.svg"
+                                    media="(prefers-color-scheme: light)"
+                                />
+                                <source
+                                    srcset="https://doteye.online/assets/social/light/github.svg"
+                                    media="(prefers-color-scheme: dark)"
+                                />
+                                <img
+                                    width="25"
+                                    height="25"
+                                    src="https://doteye.online/assets/social/light/github.svg"
+                                    alt="GitHub"
+                                />
+                            </picture>
+                        </a>
+                    </div>
+                    <a href="https://doteye.online/privacy" target="_blank">Privacy Policy</a>
+                    <button id="close-modal" class="close-button" title="Close">Close</button>
+                </div>
+            </div>
+        </dialog>
+
+        <script type="module" src="/src/main.ts"></script>
+    </body>
+</html>
